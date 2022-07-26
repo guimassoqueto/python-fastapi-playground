@@ -1,4 +1,3 @@
-from hashlib import new
 from random import randint
 from fastapi import Body, FastAPI, HTTPException, status, Response, responses
 from .db_conn import cursor, conn
@@ -7,28 +6,13 @@ from .db_conn import cursor, conn
 
 app = FastAPI()
 
-all_posts = [
-    {
-        "id": 1,
-        "title": "Post1",
-        "content": "content1"
-    },
-    {
-        "id": 2,
-        "title": "Post2",
-        "content": "content1"    
-    }
-]
-
-def find_post(id: int):
-    for index, post in enumerate(all_posts):
-        if post['id'] == id: return (index, post)
-    return (-1, None)
 
 ## BASIC GET
+
 @app.get("/")
 def root():
     return {"message": "Hello Gay"}
+
 
 ## GET FROM DB
 
@@ -45,7 +29,7 @@ def get_posts():
 ## SCHEMAS WITH DATABASE
 
 from pydantic import BaseModel
-from typing import Optional, Union
+from typing import Optional
 
 
 class Post(BaseModel):
