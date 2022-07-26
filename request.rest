@@ -1,3 +1,8 @@
-GET http://127.0.0.1:8000/posts HTTP/1.1
+PUT http://127.0.0.1:8000/posts/5 HTTP/1.1
 content-type: application/json
+
+{
+    "title": "Post 5 UPDATED",
+    "content": "Content 5 UPDATED"
+}
 
