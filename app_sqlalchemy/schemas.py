@@ -16,8 +16,10 @@ class CreatePost(BasePost):
 class UpdatePost(BasePost):
     pass
 
+
 class Post(BasePost):
     created_at: datetime
+    updated_at: datetime
 
     class Config:
         orm_mode = True

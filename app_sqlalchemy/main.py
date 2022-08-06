@@ -4,6 +4,9 @@ from .database import engine, get_db
 from sqlalchemy.orm import Session
 from typing import List
 
+# help imports
+from datetime import datetime
+
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -17,29 +20,32 @@ def get_posts(db: Session = Depends(get_db)):
 
 
 @app.post("/sqlalchemy/posts", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
-def post_posts(post: schemas.CreatePost, db: Session = Depends(get_db)):
-    new_post = models.Post(**post.dict())
+def create_post(post_request: schemas.CreatePost, db: Session = Depends(get_db)):
+    new_post = models.Post(**post_request.dict())
 
+    # add the new_post to the database
     db.add(new_post)
+    # commit the changes e insert the new_post into database
     db.commit()
+    # retrieve the new_post created
     db.refresh(new_post)
 
     return new_post
 
 
-@app.get("/sqlalchemy/posts/{id}", status_code=status.HTTP_200_OK, response_model=schemas.Post)
-def post_post(id: int, db: Session = Depends(get_db)):
-    single_post = db.query(models.Post).filter(models.Post.id == id).first()
+@app.get("/sqlalchemy/posts/{_id}", status_code=status.HTTP_200_OK, response_model=schemas.Post)
+def get_post(_id: int, db: Session = Depends(get_db)):
+    single_post = db.query(models.Post).filter(models.Post.id == _id).first()
     
     if not single_post:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Post with id={id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Post with id={_id} not found")
 
     return single_post
 
 
-@app.delete("/sqlalchemy/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(id: int,  db: Session = Depends(get_db)):
-    deleted_post = db.query(models.Post).filter(models.Post.id == id)
+@app.delete("/sqlalchemy/posts/{_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_post(_id: int,  db: Session = Depends(get_db)):
+    deleted_post = db.query(models.Post).filter(models.Post.id == _id)
 
     if not deleted_post.all():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Post with id={id} doesn't exist")
@@ -50,17 +56,20 @@ def delete_post(id: int,  db: Session = Depends(get_db)):
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-@app.put("/sqlalchemy/posts/{id}", status_code=status.HTTP_202_ACCEPTED, response_model=schemas.Post)
-def put_post(id: int, post: schemas.UpdatePost, db: Session = Depends(get_db)):
-    changed_post = db.query(models.Post).filter(models.Post.id == id)
+@app.put("/sqlalchemy/posts/{_id}", status_code=status.HTTP_202_ACCEPTED, response_model=schemas.Post)
+def update_post(_id: int, post_request: schemas.UpdatePost, db: Session = Depends(get_db)):
+    changed_post = db.query(models.Post).filter(models.Post.id == _id)
+
+    post_request = post_request.dict()
+    post_request['updated_at'] = datetime.now().isoformat()
 
     if not changed_post: 
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"post {id} was not found"
+            detail=f"post {_id} was not found"
         )
 
-    changed_post.update(post.dict(), synchronize_session=False)
+    changed_post.update(post_request, synchronize_session=False)
     db.commit()
 
     return changed_post.first()
