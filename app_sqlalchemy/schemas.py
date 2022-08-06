@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from typing import Optional
 
 
+# Posts
 class BasePost(BaseModel):
     title: str
     content: Optional[str] = None
@@ -23,3 +24,13 @@ class Post(BasePost):
 
     class Config:
         orm_mode = True
+
+
+# Users
+class BaseUser(BaseModel):
+    email: str
+    password: str
+
+
+class CreateUser(BaseUser):
+    pass
