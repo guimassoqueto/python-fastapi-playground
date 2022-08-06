@@ -1,8 +1,2 @@
-POST http://127.0.0.1:8000/sqlalchemy/posts HTTP/1.1
-content-type: application/json
-
-{
-  "title": "The Title",
-  "content": "Content",
-  "published": false
-}
+GET http://127.0.0.1:8000/sqlalchemy/users HTTP/1.1
+content-type: application/jsonbcryprt

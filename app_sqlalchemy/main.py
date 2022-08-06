@@ -73,3 +73,29 @@ def update_post(_id: int, post_request: schemas.UpdatePost, db: Session = Depend
     db.commit()
 
     return changed_post.first()
+
+
+@app.get(path="/sqlalchemy/users", status_code=status.HTTP_200_OK, response_model=List[schemas.User])
+def get_users(db: Session = Depends(get_db)):
+    users = db.query(models.User).all()
+
+    return users
+
+
+@app.post("/sqlalchemy/users", status_code=status.HTTP_201_CREATED, response_model=schemas.User)
+def create_user(user_request: schemas.CreateUser, db: Session = Depends(get_db)):
+    new_user = db.query(models.User).filter(models.User.email == user_request.email.strip()).first()
+
+    if new_user:
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail="email already taken"
+        )
+
+    new_user = models.User(**user_request.dict())
+
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+
+    return new_user

@@ -34,3 +34,10 @@ class BaseUser(BaseModel):
 
 class CreateUser(BaseUser):
     pass
+
+
+class User(BaseUser):
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
