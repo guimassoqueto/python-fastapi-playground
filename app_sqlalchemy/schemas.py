@@ -36,7 +36,8 @@ class CreateUser(BaseUser):
     pass
 
 
-class User(BaseUser):
+class User(BaseModel):
+    email: str
     created_at: datetime
 
     class Config:

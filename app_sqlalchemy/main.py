@@ -6,6 +6,7 @@ from typing import List
 
 # help imports
 from datetime import datetime
+import bcrypt
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -69,7 +70,7 @@ def update_post(_id: int, post_request: schemas.UpdatePost, db: Session = Depend
             detail=f"post {_id} was not found"
         )
 
-    changed_post.update(post_request, synchronize_session=False)
+    changed_post.update(post_request, synchronize_session="TRUE")
     db.commit()
 
     return changed_post.first()
@@ -92,7 +93,9 @@ def create_user(user_request: schemas.CreateUser, db: Session = Depends(get_db))
             detail="email already taken"
         )
 
-    new_user = models.User(**user_request.dict())
+    user_data = user_request.dict()
+    user_data['password'] = bcrypt.hashpw(user_request.password.encode("utf-8"), bcrypt.gensalt(5))
+    new_user = models.User(**user_data)
 
     db.add(new_user)
     db.commit()
