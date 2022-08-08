@@ -2,6 +2,6 @@ POST http://127.0.0.1:8000/sqlalchemy/users HTTP/1.1
 content-type: application/json
 
 {
-  "email": "otario_king@gaymen.com",
+  "email": "otario_king2@gaymen.com",
   "password": "123oliveira4"
 }

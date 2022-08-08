@@ -6,8 +6,10 @@ from typing import List
 
 # help imports
 from datetime import datetime
-import bcrypt
+from passlib.context import CryptContext
 
+
+password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -93,9 +95,9 @@ def create_user(user_request: schemas.CreateUser, db: Session = Depends(get_db))
             detail="email already taken"
         )
 
-    user_data = user_request.dict()
-    user_data['password'] = bcrypt.hashpw(user_request.password.encode("utf-8"), bcrypt.gensalt(5))
-    new_user = models.User(**user_data)
+    hashed_password = password_context.hash(user_request.password)
+    user_request.password = hashed_password
+    new_user = models.User(**user_request.dict())
 
     db.add(new_user)
     db.commit()
