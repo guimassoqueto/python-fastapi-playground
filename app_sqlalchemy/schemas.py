@@ -37,6 +37,7 @@ class CreateUser(BaseUser):
 
 
 class UserResponse(BaseModel):
+    id: int
     email: str
     created_at: datetime
 
