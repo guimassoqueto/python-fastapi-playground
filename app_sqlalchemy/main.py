@@ -76,14 +76,14 @@ def update_post(_id: int, post_request: schemas.UpdatePost, db: Session = Depend
     return changed_post.first()
 
 
-@app.get(path="/sqlalchemy/users", status_code=status.HTTP_200_OK, response_model=List[schemas.User])
+@app.get(path="/sqlalchemy/users", status_code=status.HTTP_200_OK, response_model=List[schemas.UserResponse])
 def get_users(db: Session = Depends(get_db)):
     users = db.query(models.User).all()
 
     return users
 
 
-@app.post("/sqlalchemy/users", status_code=status.HTTP_201_CREATED, response_model=schemas.User)
+@app.post("/sqlalchemy/users", status_code=status.HTTP_201_CREATED, response_model=schemas.UserResponse)
 def create_user(user_request: schemas.CreateUser, db: Session = Depends(get_db)):
     new_user = db.query(models.User).filter(models.User.email == user_request.email.strip()).first()
 

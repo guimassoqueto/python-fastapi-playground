@@ -1,5 +1,5 @@
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import Optional
 
 
@@ -28,7 +28,7 @@ class Post(BasePost):
 
 # Users
 class BaseUser(BaseModel):
-    email: str
+    email: EmailStr
     password: str
 
 
@@ -36,7 +36,7 @@ class CreateUser(BaseUser):
     pass
 
 
-class User(BaseModel):
+class UserResponse(BaseModel):
     email: str
     created_at: datetime
 
