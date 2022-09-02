@@ -1,4 +1,4 @@
-PUT http://127.0.0.1:8000/sqlalchemy/posts/1 HTTP/1.1
+POST http://127.0.0.1:8000/sqlalchemy/posts HTTP/1.1
 content-type: application/json
 
 {
