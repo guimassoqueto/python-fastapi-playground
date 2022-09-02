@@ -1,0 +1,8 @@
+PUT http://127.0.0.1:8000/sqlalchemy/posts/1 HTTP/1.1
+content-type: application/json
+
+{
+    "title": "Lorem Ipsum UPDATED",
+    "content": "Content 1 UPDATED",
+    "published": false
+}
