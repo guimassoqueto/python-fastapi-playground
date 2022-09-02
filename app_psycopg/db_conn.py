@@ -3,6 +3,9 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from sys import exit
 from time import sleep
+from dotenv import load_dotenv
+
+load_dotenv()
 
 while True:
     try: 
@@ -10,7 +13,7 @@ while True:
             host='localhost', 
             database='fastapi', 
             user='postgres', 
-            password='gJD2608!',
+            password='postgres',
             cursor_factory=RealDictCursor
         )
 
