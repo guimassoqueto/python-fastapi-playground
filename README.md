@@ -1,4 +1,4 @@
-# python_fastapi
+# python-fastapi-playground
 
 ### Postgres Container
 If you don`t have Docker installed, install it, then run (inside the python_fastapi folder):
